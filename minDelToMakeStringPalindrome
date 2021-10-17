@@ -1,0 +1,131 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+void dfile() {
+#ifndef ONLINE_JUDGE
+	freopen("input.txt", "r", stdin);
+	freopen("output.txt", "w", stdout);
+#endif
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+}
+
+//Using Recursion
+int getLCS(string a, string b, int n, int m) {
+	if (n == 0 or m == 0)
+	{
+		return 0;
+	}
+
+	if (a[n - 1] == b[m - 1])
+	{
+		return 1 + getLCS(a, b, n - 1, m - 1);
+	}
+	else
+		return max(getLCS(a, b, n - 1, m), getLCS(a, b, n, m - 1));
+}
+
+int minDelToMakePalindrome(string a) {
+	int n = a.size();
+	int m = a.size();
+
+	const string str1 = a;
+	reverse(a.begin(), a.end());
+	string str2 = a;
+
+	return n - getLCS(str1, str2, n, m);
+}
+
+
+//Using topDown DP
+int getLCS_td_dp(string text1, string text2, int n, int m) {
+
+	vector<vector<int>> dp(n + 1, vector<int>(m + 1, -1));
+	//Base case - if string is empty or null string
+	if (n == 0 or m == 0)
+	{
+		return 0; //length of the longest subSeq will be 0
+	}
+
+	if (dp[n][m] != -1)
+	{
+		return dp[n][m];
+	}
+
+	if (text1[n - 1] == text2[m - 1])
+	{
+		return dp[n][m] = 1 + getLCS_td_dp(text1, text2, n - 1, m - 1);
+	}
+	else
+		return dp[n][m] = max(getLCS_td_dp(text1, text2, n, m - 1), getLCS_td_dp(text1, text2, n - 1, m));
+}
+
+int minDelToMakePalindrome_td_dp(string a) {
+	int n = a.size();
+	int m = a.size();
+
+	const string str1 = a;
+	reverse(a.begin(), a.end());
+	string str2 = a;
+
+	return n - getLCS_td_dp(str1, str2, n, m);
+}
+
+
+//Using bottomUp DP
+int getLCS_bu_dp(string text1, string text2, int n, int m) {
+
+	vector<vector<int>> dp(n + 1, vector<int>(m + 1));
+	//Initilization
+
+	for (int i = 0; i <= n; ++i)
+	{
+		dp[i][0] = 0;
+	}
+
+	for (int j = 0; j <= m ; ++j)
+	{
+		dp[0][j] = 0;
+	}
+
+
+	for (int i = 1; i <= n ; ++i)
+	{
+		for (int j = 1; j <= m ; ++j)
+		{
+			if (text1[i - 1] == text2[j - 1])
+			{
+				dp[i][j] = 1 + dp[i - 1][j - 1];
+			}
+			else {
+				dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
+			}
+		}
+	}
+	return dp[n][m];
+}
+
+int minDelToMakePalindrome_bu_dp(string a) {
+	int n = a.size();
+	int m = a.size();
+
+	const string str1 = a;
+	reverse(a.begin(), a.end());
+	string str2 = a;
+
+	return n - getLCS_bu_dp(str1, str2, n, m);
+}
+
+
+int main()
+{
+	dfile();
+
+	string s = "bbbab";
+	cout << minDelToMakePalindrome(s) << endl;
+	cout << minDelToMakePalindrome_td_dp(s) << endl;
+	cout << minDelToMakePalindrome_bu_dp(s) << endl;
+
+	return 0;
+}
+
