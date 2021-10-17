@@ -1,0 +1,94 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+void dfile() {
+#ifndef ONLINE_JUDGE
+	freopen("input.txt", "r", stdin);
+	freopen("output.txt", "w", stdout);
+#endif
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+}
+
+void getSuperSeq(string s1, string s2, int n, int m, string &ans) {
+	vector<vector<int>> dp(n + 1, vector<int>(m + 1));
+	//Initilization
+
+	for (int i = 0; i <= n; ++i)
+	{
+		dp[i][0] = 0;
+	}
+
+	for (int j = 0; j <= m ; ++j)
+	{
+		dp[0][j] = 0;
+	}
+
+
+	for (int i = 1; i <= n ; ++i)
+	{
+		for (int j = 1; j <= m ; ++j)
+		{
+			if (s1[i - 1] == s2[j - 1])
+			{
+				dp[i][j] = 1 + dp[i - 1][j - 1];
+			}
+			else {
+				dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
+			}
+		}
+	}
+
+	int l1 = n, l2 = m; //l1->i,l2->j
+
+	while (l1 > 0 and l2 > 0) {
+		if (s1[l1 - 1] == s2[l2 - 1])
+		{
+			ans.push_back(s1[l1 - 1]);
+			l1--; l2--;
+		}
+		else {
+			if (dp[l1 - 1][l2] > dp[l1][l2 - 1])
+			{
+				ans.push_back(s1[l1 - 1]);
+				l1--;
+			}
+			else if (dp[l1][l2 - 1] > dp[l1 - 1][l2])
+			{
+				ans.push_back(s2[l2 - 1]);
+				l2--;
+			}
+		}
+	}
+
+	while (l1 > 0) {
+		ans.push_back(s1[l1 - 1]);
+		l1--;
+	}
+	while (l2 > 0) {
+		ans.push_back(s2[l2 - 1]);
+		l2--;
+	}
+
+	reverse(ans.begin(), ans.end());
+	cout << ans;
+}
+
+void printLongestSuperSeq_bu_dp(string s1, string s2) {
+	int n = s1.size();
+	int m = s2.size();
+	string ans = "";
+
+	getSuperSeq(s1, s2, n, m, ans);
+}
+
+int main() {
+
+	dfile();
+
+	string s1 = "acbcf", s2 = "abcdaf";
+	printLongestSuperSeq_bu_dp(s1, s2);
+
+	return 0;
+}
+
