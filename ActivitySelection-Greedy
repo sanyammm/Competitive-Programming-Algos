@@ -1,0 +1,62 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+void dfile() {
+#ifndef ONLINE_JUDGE
+	freopen("input.txt", "r", stdin);
+	freopen("output.txt", "w", stdout);
+#endif
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+}
+
+bool comparator(pair<int, int> p1, pair<int, int>p2) {
+	return (p1.second < p2.second);
+}
+
+void activitySelection(int start[], int end[], int n) {
+	vector<pair<int, int>> container;
+	for (int i = 0; i < n; ++i)
+	{
+		container.push_back({start[i], end[i]});
+	}
+
+	sort(container.begin(), container.end(), comparator);
+
+	vector<int> ans; int ansCount = 1;
+	ans.push_back(container[0].first);
+
+	int finishTime = container[0].second;
+
+	for (int i = 1; i < container.size(); ++i)
+	{
+		if (container[i].first >= finishTime)
+		{
+			ansCount++;
+			ans.push_back(container[i].first);
+			finishTime  = container[i].second;
+		}
+	}
+
+	cout << ansCount << " " << endl;
+	for (int i = 0; i < ans.size(); ++i)
+	{
+		cout << ans[i] << " ";
+	}
+
+}
+
+int main()
+{
+	dfile();
+
+	int n = 3;
+	int start[n]  =  {10, 12, 20};
+	int finish[n] =  {20, 25, 30};
+
+	activitySelection(start, finish, n);
+
+	return 0;
+}
+
+
